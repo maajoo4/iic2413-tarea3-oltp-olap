@@ -1,14 +1,14 @@
 CREATE TABLE Dimen_usuario (id_usuario SERIAL PRIMARY KEY,
                             nombre varchar(50) NOT NULL, 
                             email varchar(50) NOT NULL, 
-                            pais varchar(50) NOT NULL, 
+                            pais varchar(100) NOT NULL, 
                             fecha_registro TIMESTAMP NOT NULL, 
                             plan varchar(30) NOT NULL
 );
 
 CREATE TABLE Dimen_artista (id_artista SERIAL PRIMARY KEY,
                             nombre varchar(50) NOT NULL,
-                            pais_origen varchar(30) NOT NULL,
+                            pais_origen varchar(100) NOT NULL,
                             genero_principal varchar(40) NOT NULL
                         
 );
