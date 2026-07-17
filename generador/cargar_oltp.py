@@ -1,26 +1,13 @@
+'''Funciones principales para conectarse a la bd y cargar los dato OLTP'''
+
 import psycopg2
 import os
 import argparse
 from dotenv import load_dotenv
-from pathlib import Path
+from psycopg2 import sql
 import time
-
-load_dotenv()
-
-CARPETA_ACTUAL = Path(__file__).parent
-RAIZ_PROYECTO = CARPETA_ACTUAL.parent
-RUTA_SCHEMA_OLTP = RAIZ_PROYECTO / "modelo" / "schema_oltp.sql"
-# Orden de carga respetando las dependencias de FK
-TABLAS = ["usuarios", "artistas", "generos", "canciones", "reproducciones"]
-
-# Columnas de cada tabla, en el mismo orden que en los CSV que son los mismos del esquema
-COLUMNAS = {
-    "usuarios": ["id_usuario", "nombre", "email", "pais", "fecha_registro", "plan"],
-    "artistas": ["id_artista", "nombre", "pais_origen", "genero_principal"],
-    "generos": ["id_genero", "nombre"],
-    "canciones": ["id_cancion", "duracion", "titulo", "id_artista", "id_genero"],
-    "reproducciones": ["id_reproduccion", "id_usuario", "id_cancion", "tmsp", "dispositivo", "tiempo"],
-}
+from .config import RAIZ_PROYECTO, RUTA_SCHEMA_OLTP, TABLAS, COLUMNAS
+load_dotenv(RAIZ_PROYECTO / ".env")
 
 
 # Conectar con las varibles de entorno para no hacerlo desde la terminal y poder inicializar postgres
@@ -45,7 +32,10 @@ def crear_base_si_no_existe(nombre_base):
         existe = cur.fetchone() is not None
 
         if not existe:
-            cur.execute(f"CREATE DATABASE {nombre_base}")
+            cur.execute(
+                sql.SQL("CREATE DATABASE {}")
+                .format(sql.Identifier(nombre_base))
+            )
             print(f"Base de datos '{nombre_base}' creada.")
         else:
             print(f"Base de datos '{nombre_base}' ya existía.")
@@ -91,14 +81,27 @@ def main():
     nombre_base = f"db_streaming_escala{args.s}"
     carpeta_datos = RAIZ_PROYECTO / "datos" / "csv" / f"escala_{args.s}"
 
+    inicio_total = time.perf_counter()
+
+    inicio = time.perf_counter()
     crear_base_si_no_existe(nombre_base)
+    print(f"Crear base: {time.perf_counter() - inicio:.2f} s")
+
+    inicio = time.perf_counter()
     cargar_schema(nombre_base)
+    print(f"Cargar schema: {time.perf_counter() - inicio:.2f} s")
 
     conn = conectar(nombre_base)
     try:
         for nombre_tabla in TABLAS:
+            inicio = time.perf_counter()
             ruta_csv = carpeta_datos / f"{nombre_tabla}.csv"
             cargar_tabla(conn, nombre_tabla, ruta_csv)
+
+            print(
+                f"Cargar {nombre_tabla}: "
+                f"{time.perf_counter() - inicio:.2f} s"
+            )
     finally:
         conn.close()
 
