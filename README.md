@@ -29,32 +29,57 @@ Comparación experimental OLTP (PostgreSQL) vs OLAP (DuckDB) sobre una plataform
 
 Antes de ejecutar el proyecto, renombre el archivo `.env.example` a `.env` y modifique `PGUSER` con su usuario de postgres y `PGPASSWORD` con su contraseña para postgres. Estos datos serán usados en la función `conectar` declarada en el archivo `cargar_postgres`.
 El archivo `.env` original **no se sube al repositorio** (está incluido en `.gitignore`), ya que contiene credenciales sensibles.
+---
+### 1. Generar los datos sintéticos con escalas diferentes:
 
-### 1. Generar los datos sintéticos con escalas diferentes
--- Desde la ruta en generador/ correr por separado cada uno de los siguientes comandos que corresponden a la escala a ejecutar. Esto genera los archivos CSV de la instancia en `datos/csv/escala_1/` (usuarios, artistas, generos, canciones, reproducciones).
+Desde la raiz del proyecto correr por separado cada uno de los siguientes comandos que corresponden a la escala a ejecutar. Esto genera los archivos CSV de la instancia en `datos/csv/escala_n/` (usuarios, artistas, generos, canciones, reproducciones).
 
 ```bash
-python generar_datos.py --s 1  
-python generar_datos.py --s 10
-python generar_datos.py --s 100
-python generar_datos.py --s 1000
-python generar_datos.py --s 10000   
+python -m generador.generar_datos --s 1   
+python -m generador.generar_datos --s 10
+python -m generador.generar_datos --s 100
+python -m generador.generar_datos --s 1000
+python -m generador.generar_datos --s 10000
 ```
 ---
-### 2. Cargar los datos en la base de datos según las escalas
+### 2. Cargar los datos en la base de datos según las escalas:
 
-Crear la base de datos y cargar los datos segun la escala una por una (separado). 
+Crear la base de datos y cargar los datos según la escala una por una (separado). 
 Con esto se crea la base de datos correspondiente (`db_streaming_escala{s}`) si no existe, carga el esquema OLTP, y carga los datos generados en el paso anterior usando `COPY`.
-Para generar otras escalas, cambia el valor de `--s`. Las propuestas son las siguientes:
+Para generar otras escalas, correr por separado cada uno de los siguientes comandos desde la raiz del proyecto:
 
 ```bash
-python cargar_postgres.py --s 1
-python cargar_postgres.py --s 10
-python cargar_postgres.py --s 100
-python cargar_postgres.py --s 1000
-python cargar_postgres.py --s 10000
+python -m generador.cargar_oltp --s 1
+python -m generador.cargar_oltp --s 10
+python -m generador.cargar_oltp --s 100
+python -m generador.cargar_oltp --s 1000
+python -m generador.cargar_oltp --s 10000
 ```
+---
+### 3. Transformacion OLTP -> Estrella y generación de archivos parquet según escalas:
 
+Desde la raiz del proyecto correr por separado lo siguiente:
+
+```bash
+python -m etl.etl --s 1 
+python -m etl.etl --s 10
+python -m etl.etl --s 100
+python -m etl.etl --s 1000
+python -m etl.etl --s 10000
+```
+---
+### 4. Cargar los datos a Duckdb y verificar la equivalencia:
+
+Desde la raiz del proyecto correr por separado lo siguiente:
+
+```bash
+python -m etl.verificar_equivalencia --s 1
+python -m etl.verificar_equivalencia --s 10
+python -m etl.verificar_equivalencia --s 100
+python -m etl.verificar_equivalencia --s 1000
+python -m etl.verificar_equivalencia --s 10000
+```
+---
 # Consideraciones
 
 - Los datos son generados sintéticamente.
