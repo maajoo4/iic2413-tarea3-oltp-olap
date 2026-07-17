@@ -1,8 +1,10 @@
+'''Funciones generadoras de datos sinteticos para cada tabla'''
+
 import random
 import pandas as pd
-
-from config import GENEROS_FIJOS
-from utils import escoger_genero, escoger_plan
+import numpy as np
+from .config import GENEROS_FIJOS, DISPOSITIVOS
+from .utils import escoger_genero, escoger_plan
 
 
 def generar_usuarios(n_usuarios, fake):
@@ -68,3 +70,47 @@ def generar_canciones(n_canciones, df_artistas, df_generos):
                                 "id_artista": id_artist,
                                 "id_genero": id_genero})
     return pd.DataFrame(lista_canciones)
+
+
+def generar_reproducciones(id_inicial, chunk, df_usuarios, df_canciones):
+    # como es orden de decena de millones con numpy genera de una vez todos los índices aleatorios que se van a necesitar
+    indices_usuarios = np.random.randint(
+        0, len(df_usuarios), size=chunk)
+    ids_usuario_elegidos = df_usuarios["id_usuario"].to_numpy()[
+        indices_usuarios]
+    fechas_registro_elegidas = df_usuarios["fecha_registro"].to_numpy()[
+        indices_usuarios]
+
+    indices_canciones = np.random.randint(
+        0, len(df_canciones), size=chunk)
+    ids_cancion_elegidas = df_canciones["id_cancion"].to_numpy()[
+        indices_canciones]
+    duraciones_elegidas = df_canciones["duracion"].to_numpy()[
+        indices_canciones]
+
+    # generar todo de forma vectorizada pq con un loop es ineficiente
+    dispositivos = np.random.choice(DISPOSITIVOS, size=chunk)
+    u = np.random.random(chunk)
+    tiempos = (u * duraciones_elegidas).astype(np.int32) + 1
+
+    ahora = np.datetime64("now")
+    segundos_disponibles = (
+        (ahora - fechas_registro_elegidas) / np.timedelta64(1, "s"))
+    offset_aleatorio = (
+        np.random.random(chunk) * segundos_disponibles
+    ).astype(np.int64)
+
+    timestamps = fechas_registro_elegidas + \
+        offset_aleatorio * np.timedelta64(1, "s")
+
+    ids_reproduccion = np.arange(id_inicial, id_inicial + chunk)
+    df_reproducciones = pd.DataFrame({
+        "id_reproduccion": ids_reproduccion,
+        "id_usuario": ids_usuario_elegidos,
+        "id_cancion": ids_cancion_elegidas,
+        "tmsp": timestamps,
+        "dispositivo": dispositivos,
+        "tiempo": tiempos
+    })
+
+    return df_reproducciones

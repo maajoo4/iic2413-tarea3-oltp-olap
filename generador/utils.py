@@ -1,4 +1,6 @@
-from config import PLANES, GENEROS_FIJOS
+'''Funciones auxiliares'''
+
+from .config import PLANES, GENEROS_FIJOS
 import random
 
 

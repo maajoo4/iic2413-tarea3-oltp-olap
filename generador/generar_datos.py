@@ -2,27 +2,25 @@ import argparse
 import random
 import numpy as np
 from faker import Faker
-import time  # descomentar para ver tiempos
+import time  # ver tiempos
 from pathlib import Path
 
-from config import (
+from .config import (
     BASE_USUARIOS,
     BASE_ARTISTAS,
     BASE_CANCIONES,
     BASE_REPRODUCCIONES,
     SEMILLA,
-    TAMANO_CHUNK
+    TAMANO_CHUNK,
+    RAIZ_PROYECTO
 )
-from generadores import (
+from .generadores import (
     generar_usuarios,
     generar_artistas,
     generar_generos,
     generar_canciones
 )
-from exportar_datos import guardar_csv, guardar_reproducciones_csv
-
-CARPETA_ACTUAL = Path(__file__).parent
-RAIZ_PROYECTO = CARPETA_ACTUAL.parent
+from .exportar_datos import guardar_csv, guardar_reproducciones_csv
 
 
 def main():
