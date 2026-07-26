@@ -68,7 +68,7 @@ def cargar_tabla(conn, nombre_tabla, ruta_csv):
             cur.copy_expert(sql_copy, archivo_csv)
 
     conn.commit()
-    print(f"Tabla '{nombre_tabla}' cargada desde {ruta_csv}")
+    print(f"Tabla '{nombre_tabla}' cargada")
 
 
 def main():
@@ -80,9 +80,7 @@ def main():
 
     nombre_base = f"db_streaming_escala{args.s}"
     carpeta_datos = RAIZ_PROYECTO / "datos" / "csv" / f"escala_{args.s}"
-
-    inicio_total = time.perf_counter()
-
+    
     inicio = time.perf_counter()
     crear_base_si_no_existe(nombre_base)
     print(f"Crear base: {time.perf_counter() - inicio:.2f} s")

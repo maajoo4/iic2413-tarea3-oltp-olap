@@ -27,4 +27,4 @@ def exportar_fact(conexion, consulta_sql, carpeta_destino, nombre_fact, chunksiz
         ruta_archivo = carpeta_destino / f"{nombre_fact}_parte{i}.parquet"
         chunk.to_parquet(ruta_archivo, index=False)
 
-    print(f"Tabla de hechos '{nombre_fact}' exportada en {carpeta_destino}")
+    print(f"Tabla de hechos '{nombre_fact}' exportada")

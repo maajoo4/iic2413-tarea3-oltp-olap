@@ -25,7 +25,8 @@ def guardar_reproducciones_csv(n_reproducciones, df_usuarios, df_canciones, tama
 
         df_chunk = generar_reproducciones(
             id_inicial, cantidad, df_usuarios, df_canciones)
-
+        # ordena el chunk por timestamp antes de guardar
+        df_chunk = df_chunk.sort_values("tmsp")
         df_chunk.to_csv(
             ruta_archivo,
             # si es la primera vez lo reescribe, sino hace append
@@ -37,4 +38,4 @@ def guardar_reproducciones_csv(n_reproducciones, df_usuarios, df_canciones, tama
         contador += cantidad
         primera_vuelta = False
 
-    print(f"Se generaron {contador} reproducciones en {ruta_archivo}")
+    print(f"Se generaron {contador} reproducciones")
