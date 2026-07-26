@@ -5,8 +5,7 @@ from etl.equivalencia import conectar_duckdb, cargar_tablas_duckdb
 import subprocess
 
 def reiniciar_pg():
-    # en mi compu PostgreSQL 17 está registrado como
-    # el servicio "postgresql-x64-17".
+    # eajustar si es necesario
     subprocess.run(
         ["powershell", "-Command",
          "Restart-Service postgresql-x64-17"],

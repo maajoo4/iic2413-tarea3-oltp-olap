@@ -7,6 +7,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 CARPETA_CONSULTAS = RAIZ / "consultas"
 ESCALAS = [1, 5, 10, 50, 1000]
 RUTA_RESULTADOS = RAIZ / "resultados"
+RUTA_CSV = RAIZ / "resultados" / "tiempos_crudos.csv"
 
 
 def leer_consulta(ruta_sql):
