@@ -1,4 +1,4 @@
--- SELECT 1 o 2 JOINS baja selectividad con agregacion 
+-- SELECT 2 a 3 JOINS baja selectividad con agregacion 
 -- Beneficia OLAP
 
 -- Datos de reproduccion segun genero considerando reproducciones tiempo total y duracion promedio de canciones

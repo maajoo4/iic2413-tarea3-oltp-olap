@@ -8,4 +8,4 @@ FROM Reproducciones r
 JOIN Canciones c ON r.id_cancion = c.id_cancion
 JOIN Artistas a ON c.id_artista = a.id_artista
 GROUP BY a.pais_origen
-ORDER BY tiempo_total DESC
+ORDER BY tiempo_total DESC;
