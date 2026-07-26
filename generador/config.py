@@ -3,15 +3,15 @@
 from pathlib import Path
 
 SEMILLA = 42
-BASE_USUARIOS = 100
-BASE_ARTISTAS = 1000
-BASE_CANCIONES = 10000
-BASE_REPRODUCCIONES = 100000
+BASE_USUARIOS = 1000
+BASE_ARTISTAS = 100
+BASE_CANCIONES = 1000
+BASE_REPRODUCCIONES = 10000
 GENEROS_FIJOS = ["rock", "pop", "jazz",
                  "clasica", "reggaeton", "trap", "salsa"]
 PLANES = ['free', 'premium', 'familiar']
 DISPOSITIVOS = ['movil', 'web', 'smarttv']
-TAMANO_CHUNK = 500_000
+TAMANO_CHUNK = 500000
 CARPETA_ACTUAL = Path(__file__).parent
 RAIZ_PROYECTO = CARPETA_ACTUAL.parent
 RUTA_SCHEMA_OLTP = RAIZ_PROYECTO / "modelo" / "schema_oltp.sql"
