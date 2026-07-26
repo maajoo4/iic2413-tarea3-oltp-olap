@@ -8,23 +8,29 @@ from .utils import escoger_genero, escoger_plan
 
 
 def generar_usuarios(n_usuarios, fake):
-    lista_usuarios = []
+    ids_usuario = np.arange(1, n_usuarios + 1)
+    nombres = np.array(["u" + str(i) for i in ids_usuario])
+    emails = np.array(["u" + str(i) + "@mail.com" for i in ids_usuario])
+    paises = np.array([fake.country() for _ in range(n_usuarios)])
+    planes = escoger_plan()
 
-    for i in range(n_usuarios):
-        id_usuario = i + 1
-        nombre = "u" + str(id_usuario)
-        email = fake.email()
-        pais = fake.country()
-        fecha_registro = fake.date_time_between(
-            start_date='-3y', end_date='now')
-        plan = escoger_plan()
-        lista_usuarios.append({"id_usuario": id_usuario,
-                               "nombre": nombre,
-                               "email": email,
-                               "pais": pais,
-                               "fecha_registro": fecha_registro,
-                               "plan": plan})
-    return pd.DataFrame(lista_usuarios)
+    ahora = np.datetime64("now")
+    hace_3_anios = ahora - np.timedelta64(3 * 365, "D")
+    segundos_totales = (ahora - hace_3_anios) / np.timedelta64(1, "s")
+    offsets = np.random.random(n_usuarios) * segundos_totales
+    fechas_registro = hace_3_anios + \
+        offsets.astype(np.int64) * np.timedelta64(1, "s")
+
+    df_usuarios = pd.DataFrame({
+        "id_usuario": ids_usuario,
+        "nombre": nombres,
+        "email": emails,
+        "pais": paises,
+        "fecha_registro": fechas_registro,
+        "plan": planes
+    })
+
+    return df_usuarios
 
 
 def generar_artistas(n_artistas, fake):
