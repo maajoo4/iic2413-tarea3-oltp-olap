@@ -3,7 +3,6 @@ import random
 import numpy as np
 from faker import Faker
 import time  # ver tiempos
-from pathlib import Path
 
 from .config import (
     BASE_USUARIOS,
