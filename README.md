@@ -36,10 +36,10 @@ Desde la raiz del proyecto correr por separado cada uno de los siguientes comand
 
 ```bash
 python -m generador.generar_datos --s 1   
+python -m generador.generar_datos --s 5
 python -m generador.generar_datos --s 10
-python -m generador.generar_datos --s 100
+python -m generador.generar_datos --s 50
 python -m generador.generar_datos --s 1000
-python -m generador.generar_datos --s 10000
 ```
 ---
 ### 2. Cargar los datos en la base de datos según las escalas:
@@ -50,10 +50,10 @@ Para generar otras escalas, correr por separado cada uno de los siguientes coman
 
 ```bash
 python -m generador.cargar_oltp --s 1
+python -m generador.cargar_oltp --s 5
 python -m generador.cargar_oltp --s 10
-python -m generador.cargar_oltp --s 100
+python -m generador.cargar_oltp --s 50
 python -m generador.cargar_oltp --s 1000
-python -m generador.cargar_oltp --s 10000
 ```
 ---
 ### 3. Transformacion OLTP -> Estrella y generación de archivos parquet según escalas:
@@ -62,10 +62,10 @@ Desde la raiz del proyecto correr por separado lo siguiente:
 
 ```bash
 python -m etl.etl --s 1 
+python -m etl.etl --s 5
 python -m etl.etl --s 10
-python -m etl.etl --s 100
+python -m etl.etl --s 50
 python -m etl.etl --s 1000
-python -m etl.etl --s 10000
 ```
 ---
 ### 4. Cargar los datos a Duckdb y verificar la equivalencia:
@@ -74,12 +74,20 @@ Desde la raiz del proyecto correr por separado lo siguiente:
 
 ```bash
 python -m etl.verificar_equivalencia --s 1
+python -m etl.verificar_equivalencia --s 5
 python -m etl.verificar_equivalencia --s 10
-python -m etl.verificar_equivalencia --s 100
+python -m etl.verificar_equivalencia --s 50
 python -m etl.verificar_equivalencia --s 1000
-python -m etl.verificar_equivalencia --s 10000
 ```
----
+--- 
+### 5. Correr los experimentos:
+
+Como es explicado en el informe, el siguiente comando se ejecuto en powershell como administrador:
+
+```bash
+python -m experimentos.ejecutar_experimentos
+```
+
 # Consideraciones
 
 - Los datos son generados sintéticamente.
@@ -90,3 +98,4 @@ python -m etl.verificar_equivalencia --s 10000
 ---
 
 # Observaciones/Supuestos
+Cada vez que se corre un comando se imprimen datos respecto al tiempo de ejecucion y mensajes descriptivos de cada una, con el fin de tener un poco de mayo detalle respecto a que se está ejecutando.
